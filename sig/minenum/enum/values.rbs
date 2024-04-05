@@ -1,0 +1,16 @@
+module Minenum
+  module Enum
+    class Values
+      attr_reader values: Hash[Symbol, untyped]
+
+      def initialize: (Hash[String | Symbol, untyped]) -> void
+      def each_key: { (Symbol) -> untyped } -> Hash[String | Symbol, untyped]
+      def key: (untyped) -> Symbol?
+      def match?: (String | Symbol, untyped) -> bool
+
+      private
+
+      def match_with_value?: (String | Symbol, untyped) -> bool
+    end
+  end
+end

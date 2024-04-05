@@ -1,0 +1,24 @@
+module Minenum
+  module Model
+    interface _Accessor
+      def set: (untyped model, String | Symbol name, untyped value) -> untyped
+      def get: (untyped model, String | Symbol name) -> untyped
+    end
+
+    module InstanceVariableAccessor
+      include _Accessor
+    end
+
+    module ClassMethods
+      def enum: (String | Symbol name, Hash[String | Symbol, untyped], ?adapter: _Accessor) -> void
+
+      private
+
+      def enum_methods_module: -> Module
+      def classify: (String) -> String
+
+      def const_set: [T] (String | Symbol, T) -> T
+      def include: (Module) -> self
+    end
+  end
+end

@@ -1,0 +1,9 @@
+module Minenum
+  module Enum
+    class Base
+      attr_reader value: untyped
+
+      def initialize: (untyped) -> void
+    end
+  end
+end

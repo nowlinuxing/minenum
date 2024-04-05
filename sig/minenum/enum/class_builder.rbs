@@ -1,0 +1,19 @@
+module Minenum
+  module Enum
+    module ClassBuilder
+      def self.build: (Hash[String | Symbol, untyped]) -> singleton(Minenum::Enum::Base)
+      def self.new: (Hash[String | Symbol, untyped]) -> ClassBuilder
+
+      @values: Hash[String | Symbol, untyped]
+
+      def initialize: (Hash[String | Symbol, untyped]) -> void
+      def build: -> untyped
+
+      private
+
+      def add_values_method: (untyped, Minenum::Enum::Values) -> void
+      def add_name_method: (untyped, Minenum::Enum::Values) -> void
+      def add_predicate_methods: (untyped, Minenum::Enum::Values) -> void
+    end
+  end
+end
