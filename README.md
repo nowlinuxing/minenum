@@ -1,3 +1,6 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/04440479daa0ecea68de/maintainability)](https://codeclimate.com/github/nowlinuxing/minenum/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/04440479daa0ecea68de/test_coverage)](https://codeclimate.com/github/nowlinuxing/minenum/test_coverage)
+
 # Minenum
 
 Minenum is a gem that enhances Ruby objects by adding enum functionality and returning enum objects as return values. Enums simplify representing states or types within a specific range of values and can be returned directly from methods.
