@@ -29,6 +29,9 @@ jobs:
     - name: Run rubocop
       run: bundle exec rubocop
 
+    - name: Static type check
+      run: bundle exec steep check
+
     - name: Test & publish code coverage
       uses: paambaati/codeclimate-action@v5
       env:
