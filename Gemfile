@@ -11,4 +11,5 @@ gem 'debug'
 gem 'rspec', '~> 3.0'
 gem 'rubocop', require: false
 gem 'rubocop-rspec', require: false
+gem 'simplecov', require: false
 gem 'steep', require: false
