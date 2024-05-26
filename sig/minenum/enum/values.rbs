@@ -8,12 +8,14 @@ module Minenum
       def initialize: (Hash[String | Symbol, untyped]) -> void
       def each_key: { (Symbol) -> untyped } -> Hash[String | Symbol, untyped]
       def key: (untyped) -> Symbol?
+      def value: (untyped) -> untyped
       def match?: (String | Symbol, untyped) -> bool
 
       private
 
       def match_as_key?: (untyped) -> bool
       def find_by_key: (untyped) -> Symbol?
+      def find_by_value: (untyped) -> untyped
     end
   end
 end

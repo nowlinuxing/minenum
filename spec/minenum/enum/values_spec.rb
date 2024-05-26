@@ -75,6 +75,78 @@ RSpec.describe Minenum::Enum::Values do
     end
   end
 
+  describe '#value' do
+    subject { values.value(actual) }
+
+    context 'when the registerd values are Integer' do
+      let(:values) { described_class.new(a: 1, 'b' => 2) }
+
+      [
+        [:a, 1],
+        ['a', 1],
+        [1, 1],
+        [:'1', nil],
+        ['1', nil],
+        [:b, 2],
+        ['b', 2],
+        [2, 2],
+        [:'2', nil],
+        ['2', nil],
+        [:not_registered, nil]
+      ].each do |actual, expected|
+        context "when called with #{actual.inspect}" do
+          let(:actual) { actual }
+
+          it { is_expected.to eq(expected) }
+        end
+      end
+    end
+
+    context 'when the registerd values are String' do
+      let(:values) { described_class.new(a: 'foo', 'b' => 'bar') }
+
+      [
+        [:a, 'foo'],
+        %w[a foo],
+        [:foo, 'foo'],
+        %w[foo foo],
+        [:b, 'bar'],
+        %w[b bar],
+        [:bar, 'bar'],
+        %w[bar bar],
+        [:not_registered, nil]
+      ].each do |actual, expected|
+        context "when called with #{actual.inspect}" do
+          let(:actual) { actual }
+
+          it { is_expected.to eq(expected) }
+        end
+      end
+    end
+
+    context 'when the registerd values are Symbol' do
+      let(:values) { described_class.new(a: :foo, 'b' => :bar) }
+
+      [
+        %i[a foo],
+        ['a', :foo],
+        %i[foo foo],
+        ['foo', :foo],
+        %i[b bar],
+        ['b', :bar],
+        %i[bar bar],
+        ['bar', :bar],
+        [:not_registered, nil]
+      ].each do |actual, expected|
+        context "when called with #{actual.inspect}" do
+          let(:actual) { actual }
+
+          it { is_expected.to eq(expected) }
+        end
+      end
+    end
+  end
+
   describe '#match?' do
     subject { values.match?(key_name, key_or_value) }
 
