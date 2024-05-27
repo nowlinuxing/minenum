@@ -10,10 +10,10 @@ module Minenum
     end
 
     module AccessorAdder
-      def self?.add: (untyped, Module, Symbol, untyped, _Accessor) -> void
-      def self?.add_singleton_method: (untyped, Symbol, untyped) -> void
-      def self?.add_getter: (Module, Symbol, untyped, _Accessor) -> void
-      def self?.add_setter: (Module, Symbol, _Accessor) -> void
+      def self?.add: (untyped, Module, Minenum::Model::Reflection) -> void
+      def self?.add_singleton_method: (untyped, Minenum::Model::Reflection) -> void
+      def self?.add_getter: (Module, Minenum::Model::Reflection) -> void
+      def self?.add_setter: (Module, Minenum::Model::Reflection) -> void
     end
 
     module ClassMethods
@@ -22,9 +22,7 @@ module Minenum
       private
 
       def enum_methods_module: -> Module
-      def classify: (String) -> String
 
-      def const_set: [T] (String | Symbol, T) -> T
       def include: (Module) -> self
     end
   end

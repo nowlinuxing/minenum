@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'enum'
+require_relative 'model/reflection'
 
 module Minenum
   # = Minenum
@@ -50,27 +51,30 @@ module Minenum
     end
 
     module AccessorAdder # :nodoc:
-      def add(model_class, methods_module, name, enum_class, adapter)
-        add_singleton_method(model_class, name, enum_class)
+      def add(model_class, methods_module, reflection)
+        add_singleton_method(model_class, reflection)
 
-        add_getter(methods_module, name, enum_class, adapter)
-        add_setter(methods_module, name, adapter)
+        add_getter(methods_module, reflection)
+        add_setter(methods_module, reflection)
       end
       module_function :add
 
-      def add_singleton_method(model_class, name, enum_class)
-        model_class.singleton_class.define_method(name) { enum_class }
-      end
-
-      def add_getter(methods_module, name, enum_class, adapter)
-        methods_module.define_method(name) do
-          enum_class.new(adapter.get(self, name))
+      def add_singleton_method(model_class, reflection)
+        model_class.singleton_class.define_method(reflection.name) do
+          reflection.enum_class
         end
       end
 
-      def add_setter(methods_module, name, adapter)
-        methods_module.define_method("#{name}=") do |value|
-          adapter.set(self, name, value)
+      def add_getter(methods_module, reflection)
+        methods_module.define_method(reflection.name) do
+          value = reflection.adapter.get(self, reflection.name)
+          reflection.enum_class.new(value)
+        end
+      end
+
+      def add_setter(methods_module, reflection)
+        methods_module.define_method("#{reflection.name}=") do |value|
+          reflection.adapter.set(self, reflection.name, value)
         end
       end
       module_function :add_singleton_method, :add_getter, :add_setter
@@ -78,10 +82,8 @@ module Minenum
 
     module ClassMethods # :nodoc:
       def enum(name, values, adapter: InstanceVariableAccessor)
-        enum_class = Enum::ClassBuilder.build(values)
-        const_set(classify(name.to_s), enum_class)
-
-        AccessorAdder.add(self, enum_methods_module, name.to_sym, enum_class, adapter)
+        reflection = Reflection.new(self, name, values, adapter: adapter)
+        AccessorAdder.add(self, enum_methods_module, reflection)
       end
 
       private
@@ -92,10 +94,6 @@ module Minenum
           include mod
           mod
         end
-      end
-
-      def classify(key)
-        key.gsub(/([a-z\d]+)_?/) { ::Regexp.last_match(1)&.capitalize }
       end
     end
   end

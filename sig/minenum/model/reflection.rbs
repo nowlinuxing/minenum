@@ -1,0 +1,21 @@
+module Minenum
+  module Model
+    class Reflection
+      @owner_class: untyped
+      @name: Symbol | String
+      @values: Hash[untyped, untyped]
+      @adapter: untyped
+      @enum_class: Minenum::Enum::Base
+
+      attr_reader adapter: untyped
+
+      def initialize: (untyped, String | Symbol, Hash[untyped, untyped], ?adapter: untyped) -> void
+      def name: -> Symbol
+      def enum_class: -> untyped
+
+      private
+
+      def classify: (String) -> String
+    end
+  end
+end
