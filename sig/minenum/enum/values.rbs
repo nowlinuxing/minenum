@@ -1,6 +1,8 @@
 module Minenum
   module Enum
     class Values
+      @values: Hash[Symbol, untyped]
+
       attr_reader values: Hash[Symbol, untyped]
 
       def initialize: (Hash[String | Symbol, untyped]) -> void

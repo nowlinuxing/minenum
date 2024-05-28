@@ -6,7 +6,7 @@ module Minenum
       attr_reader :values
 
       def initialize(values)
-        @values = values.transform_keys(&:to_sym).tap(&:freeze)
+        @values = values.transform_keys(&:to_sym).transform_values(&:freeze).tap(&:freeze)
         freeze
       end
 
