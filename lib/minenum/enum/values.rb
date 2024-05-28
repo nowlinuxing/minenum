@@ -15,36 +15,30 @@ module Minenum
       end
 
       def key(key_or_value)
-        if key_or_value.respond_to?(:to_sym) && (key_sym = key_or_value.to_sym) && @values.key?(key_sym)
-          key_sym
-        else
-          return @values.key(key_or_value) if @values.value?(key_or_value)
+        return key_or_value if @values.key?(key_or_value)
+        return @values.key(key_or_value) if @values.value?(key_or_value)
 
-          case key_or_value
-          when Symbol then @values.key(key_or_value.to_s)
-          when String then @values.key(key_or_value.to_sym)
-          end
-        end
+        return key_or_value.to_sym if match_as_key?(key_or_value)
+
+        find_by_key(key_or_value)
       end
 
       def match?(key_name, key_or_value)
-        if key_or_value.respond_to?(:to_sym) && (key_sym = key_or_value.to_sym) && @values.key?(key_sym)
-          key_sym == key_name.to_sym
-        else
-          match_with_value?(key_name, key_or_value)
-        end
+        key(key_or_value) == key_name.to_sym
       end
 
       private
 
-      def match_with_value?(key_name, value)
-        registered_value = @values[key_name.to_sym]
-        return true if value == registered_value
+      def match_as_key?(key_or_value)
+        return false unless key_or_value.respond_to?(:to_sym)
 
-        case value
-        when Symbol then value.to_s == registered_value
-        when String then value.to_sym == registered_value
-        else false
+        @values.key?(key_or_value.to_sym)
+      end
+
+      def find_by_key(key_or_value)
+        case key_or_value
+        when Symbol then @values.key(key_or_value.to_s)
+        when String then @values.key(key_or_value.to_sym)
         end
       end
     end

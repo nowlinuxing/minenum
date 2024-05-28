@@ -12,7 +12,8 @@ module Minenum
 
       private
 
-      def match_with_value?: (String | Symbol, untyped) -> bool
+      def match_as_key?: (untyped) -> bool
+      def find_by_key: (untyped) -> Symbol?
     end
   end
 end
