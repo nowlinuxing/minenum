@@ -17,9 +17,10 @@ module Minenum
       def build
         values = Values.new(@values)
 
-        klass = Class.new(Base)
-        add_values_method(klass, values)
-        add_name_method(klass, values)
+        klass = Class.new(Base) do
+          @_values = values
+        end
+
         add_predicate_methods(klass, values)
 
         klass
@@ -27,23 +28,13 @@ module Minenum
 
       private
 
-      def add_values_method(klass, values)
-        klass.singleton_class.define_method(:values) do
-          values.values
-        end
-      end
-
-      def add_name_method(klass, values)
-        klass.define_method(:name) do
-          values.key(@value)
-        end
-      end
-
       def add_predicate_methods(klass, values)
         values.each_key do |key|
-          klass.define_method("#{key}?") do
-            values.match?(key, @value)
-          end
+          klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+            def #{key}?                                    # def size
+              self.class._values.match?(:'#{key}', @value) #   self.class._values.match?(:'size', @value)
+            end                                            # end
+          RUBY
         end
       end
     end

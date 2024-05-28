@@ -4,10 +4,14 @@ module Minenum
       extend Forwardable
 
       attr_reader value: untyped
+      attr_reader self._values: Minenum::Enum::Values
 
       alias _inspect inspect
 
+      def self.values: -> Hash[Symbol, untyped]
+
       def initialize: (untyped) -> void
+      def name: -> Symbol?
     end
   end
 end
