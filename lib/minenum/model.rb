@@ -74,7 +74,8 @@ module Minenum
 
       def add_setter(methods_module, reflection)
         methods_module.define_method("#{reflection.name}=") do |value|
-          reflection.adapter.set(self, reflection.name, value)
+          new_value = reflection.enum_class._values.value(value)
+          reflection.adapter.set(self, reflection.name, new_value)
         end
       end
       module_function :add_singleton_method, :add_getter, :add_setter
