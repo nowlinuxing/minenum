@@ -9,6 +9,13 @@ module Minenum
       include _Accessor
     end
 
+    module AccessorAdder
+      def self?.add: (untyped, Module, Symbol, untyped, _Accessor) -> void
+      def self?.add_singleton_method: (untyped, Symbol, untyped) -> void
+      def self?.add_getter: (Module, Symbol, untyped, _Accessor) -> void
+      def self?.add_setter: (Module, Symbol, _Accessor) -> void
+    end
+
     module ClassMethods
       def enum: (String | Symbol name, Hash[String | Symbol, untyped], ?adapter: _Accessor) -> void
 
