@@ -36,31 +36,37 @@ module Minenum
 
     module AccessorAdder # :nodoc:
       def add(model_class, methods_module, reflection)
-        add_singleton_method(model_class, reflection)
+        add_singleton_method(model_class, reflection.name)
 
-        add_getter(methods_module, reflection)
-        add_setter(methods_module, reflection)
+        add_getter(methods_module, reflection.name)
+        add_setter(methods_module, reflection.name)
 
         model_class._minenum_reflections[reflection.name] = reflection
       end
       module_function :add
 
-      def add_singleton_method(model_class, reflection)
-        model_class.singleton_class.define_method(reflection.name) do
-          reflection.enum_class
-        end
+      def add_singleton_method(model_class, name)
+        model_class.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def self.#{name}                              # def self.size
+            _minenum_reflections[:'#{name}'].enum_class #   _minenum_reflections[:'size'].enum_class
+          end                                           # end
+        RUBY
       end
 
-      def add_getter(methods_module, reflection)
-        methods_module.define_method(reflection.name) do
-          _minenum_enum(reflection.name)
-        end
+      def add_getter(methods_module, name)
+        methods_module.module_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def #{name}                 # def size
+            _minenum_enum(:'#{name}') #   _minenum_enum(:'size')
+          end                         # end
+        RUBY
       end
 
-      def add_setter(methods_module, reflection)
-        methods_module.define_method("#{reflection.name}=") do |value|
-          _minenum_enum(reflection.name).value = value
-        end
+      def add_setter(methods_module, name)
+        methods_module.module_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def #{name}=(value)                       # def size=(value)
+            _minenum_enum(:'#{name}').value = value #   _minenum_enum(:'size').value = value
+          end                                       # end
+        RUBY
       end
       module_function :add_singleton_method, :add_getter, :add_setter
     end

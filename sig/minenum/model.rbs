@@ -2,11 +2,9 @@ module Minenum
   module Model
     module AccessorAdder
       def self?.add: (untyped, untyped, Minenum::Model::Reflection) -> void
-      def self?.add_singleton_method: (untyped, Minenum::Model::Reflection) -> void
-      def self?.add_getter: (untyped, Minenum::Model::Reflection) -> void
-      def self?.add_setter: (untyped, Minenum::Model::Reflection) -> void
-
-      def _minenum_enum: (Symbol) -> untyped
+      def self?.add_singleton_method: (untyped, Symbol) -> void
+      def self?.add_getter: (untyped, Symbol) -> void
+      def self?.add_setter: (untyped, Symbol) -> void
     end
 
     module ClassMethods
