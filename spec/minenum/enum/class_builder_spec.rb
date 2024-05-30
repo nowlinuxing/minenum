@@ -64,5 +64,25 @@ RSpec.describe Minenum::Enum::ClassBuilder do
         end
       end
     end
+
+    describe '#foo!' do
+      subject { enum_object.value }
+
+      let(:value) { nil }
+
+      before { enum_object.foo! }
+
+      it { is_expected.to eq(0) }
+    end
+
+    describe '#bar!' do
+      subject { enum_object.value }
+
+      let(:value) { nil }
+
+      before { enum_object.bar! }
+
+      it { is_expected.to eq(1) }
+    end
   end
 end

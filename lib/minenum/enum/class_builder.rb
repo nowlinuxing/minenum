@@ -23,6 +23,7 @@ module Minenum
 
         values.each_key do |key|
           add_predicate_method(klass, key)
+          add_bang_method(klass, key)
         end
 
         klass
@@ -32,9 +33,17 @@ module Minenum
 
       def add_predicate_method(klass, key)
         klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-          def #{key}?                                   # def size
-            self.class._values.match?(:'#{key}', value) #   self.class._values.match?(:'size', value)
+          def #{key}?                                   # def small?
+            self.class._values.match?(:'#{key}', value) #   self.class._values.match?(:'small', value)
           end                                           # end
+        RUBY
+      end
+
+      def add_bang_method(klass, key)
+        klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def #{key}!              # def small!
+            self.value = :'#{key}' #   self.value = :'small'
+          end                      # end
         RUBY
       end
     end
