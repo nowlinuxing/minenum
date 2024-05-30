@@ -1,7 +1,11 @@
 module Minenum
   module Enum
     class Base
+      extend Forwardable
+
       attr_reader value: untyped
+
+      alias _inspect inspect
 
       def initialize: (untyped) -> void
     end
