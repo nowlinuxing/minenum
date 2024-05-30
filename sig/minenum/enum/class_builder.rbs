@@ -11,7 +11,7 @@ module Minenum
 
       private
 
-      def add_predicate_methods: (untyped, Minenum::Enum::Values) -> void
+      def add_predicate_method: (untyped, Symbol) -> void
     end
   end
 end

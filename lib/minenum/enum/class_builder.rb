@@ -21,21 +21,21 @@ module Minenum
           @_values = values
         end
 
-        add_predicate_methods(klass, values)
+        values.each_key do |key|
+          add_predicate_method(klass, key)
+        end
 
         klass
       end
 
       private
 
-      def add_predicate_methods(klass, values)
-        values.each_key do |key|
-          klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-            def #{key}?                                   # def size
-              self.class._values.match?(:'#{key}', value) #   self.class._values.match?(:'size', value)
-            end                                           # end
-          RUBY
-        end
+      def add_predicate_method(klass, key)
+        klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def #{key}?                                   # def size
+            self.class._values.match?(:'#{key}', value) #   self.class._values.match?(:'size', value)
+          end                                           # end
+        RUBY
       end
     end
   end
