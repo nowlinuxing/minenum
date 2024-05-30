@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 require_relative '../enum/class_builder'
+require_relative '../enum/adapter/local_instance_variable_accessor'
 
 module Minenum
   module Model
     class Reflection # :nodoc:
-      attr_reader :adapter
+      attr_reader :adapter_builder
 
-      def initialize(owner_class, name, values, adapter: nil)
+      def initialize(owner_class, name, values, adapter_builder: Enum::Adapter::LocalInstanceVariableAccessor)
         @owner_class = owner_class
         @name = name
         @values = values
 
-        @adapter = adapter
+        @adapter_builder = adapter_builder
       end
 
       def name
@@ -30,6 +31,11 @@ module Minenum
             @owner_class.const_set(basename, klass)
           end
         end
+      end
+
+      def build_enum(model)
+        adapter = @adapter_builder.build(model, @name)
+        enum_class.new(adapter)
       end
 
       private

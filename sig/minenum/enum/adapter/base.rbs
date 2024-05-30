@@ -1,0 +1,24 @@
+module Minenum
+  module Enum
+    module Adapter
+      interface _AdapterBuilder
+        def build: (untyped, Symbol) -> Minenum::Enum::Adapter::Base
+      end
+
+      interface _Adapter
+        def get: -> untyped
+        def set: (untyped) -> untyped
+      end
+
+      class Base
+        extend _AdapterBuilder
+        include _Adapter
+
+        @enum_object: untyped
+        @name: String | Symbol
+
+        def initialize: (untyped, Symbol) -> void
+      end
+    end
+  end
+end

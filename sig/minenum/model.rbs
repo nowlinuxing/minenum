@@ -1,29 +1,31 @@
 module Minenum
   module Model
-    interface _Accessor
-      def set: (untyped model, String | Symbol name, untyped value) -> untyped
-      def get: (untyped model, String | Symbol name) -> untyped
-    end
-
-    module InstanceVariableAccessor
-      include _Accessor
-    end
-
     module AccessorAdder
-      def self?.add: (untyped, Module, Minenum::Model::Reflection) -> void
+      def self?.add: (untyped, untyped, Minenum::Model::Reflection) -> void
       def self?.add_singleton_method: (untyped, Minenum::Model::Reflection) -> void
-      def self?.add_getter: (Module, Minenum::Model::Reflection) -> void
-      def self?.add_setter: (Module, Minenum::Model::Reflection) -> void
+      def self?.add_getter: (untyped, Minenum::Model::Reflection) -> void
+      def self?.add_setter: (untyped, Minenum::Model::Reflection) -> void
+
+      def _minenum_enum: (Symbol) -> untyped
     end
 
     module ClassMethods
-      def enum: (String | Symbol name, Hash[String | Symbol, untyped], ?adapter: _Accessor) -> void
+      def enum: (String | Symbol name, Hash[String | Symbol, untyped], ?adapter_builder: Minenum::Enum::Adapter::_AdapterBuilder) -> void
+      def _minenum_reflections: -> Hash[Symbol, untyped]
 
       private
 
       def enum_methods_module: -> Module
 
       def include: (Module) -> self
+    end
+
+    module InstanceMethods
+      private
+
+      def _minenum_enum: (Symbol) -> untyped
+
+      def self._minenum_reflections: -> Hash[Symbol, untyped]
     end
   end
 end

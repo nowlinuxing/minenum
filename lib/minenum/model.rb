@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'enum'
+require_relative 'enum/adapter/local_instance_variable_accessor'
 require_relative 'model/reflection'
 
 module Minenum
@@ -28,26 +29,9 @@ module Minenum
   #   Shirt.size.values #=> { small: 1, medium: 2, large: 3 }
   #
   module Model
-    module InstanceVariableAccessor # :nodoc:
-      def set(model, name, value)
-        enum = if model.instance_variable_defined?(:@_minenum_enum)
-                 model.instance_variable_get(:@_minenum_enum)
-               else
-                 model.instance_variable_set(:@_minenum_enum, {})
-               end
-        enum[name] = value
-      end
-      module_function :set
-
-      def get(model, name)
-        enum = model.instance_variable_get(:@_minenum_enum)
-        enum&.[](name)
-      end
-      module_function :get
-    end
-
     def self.included(base)
       base.extend ClassMethods
+      base.include InstanceMethods
     end
 
     module AccessorAdder # :nodoc:
@@ -56,6 +40,8 @@ module Minenum
 
         add_getter(methods_module, reflection)
         add_setter(methods_module, reflection)
+
+        model_class._minenum_reflections[reflection.name] = reflection
       end
       module_function :add
 
@@ -67,24 +53,26 @@ module Minenum
 
       def add_getter(methods_module, reflection)
         methods_module.define_method(reflection.name) do
-          value = reflection.adapter.get(self, reflection.name)
-          reflection.enum_class.new(value)
+          _minenum_enum(reflection.name)
         end
       end
 
       def add_setter(methods_module, reflection)
         methods_module.define_method("#{reflection.name}=") do |value|
-          new_value = reflection.enum_class._values.value(value)
-          reflection.adapter.set(self, reflection.name, new_value)
+          _minenum_enum(reflection.name).value = value
         end
       end
       module_function :add_singleton_method, :add_getter, :add_setter
     end
 
     module ClassMethods # :nodoc:
-      def enum(name, values, adapter: InstanceVariableAccessor)
-        reflection = Reflection.new(self, name, values, adapter: adapter)
+      def enum(name, values, adapter_builder: Enum::Adapter::LocalInstanceVariableAccessor)
+        reflection = Reflection.new(self, name, values, adapter_builder: adapter_builder)
         AccessorAdder.add(self, enum_methods_module, reflection)
+      end
+
+      def _minenum_reflections
+        @_minenum_reflections ||= {}
       end
 
       private
@@ -95,6 +83,15 @@ module Minenum
           include mod
           mod
         end
+      end
+    end
+
+    module InstanceMethods # :nodoc:
+      private
+
+      def _minenum_enum(name)
+        @_minenum_enum ||= {}
+        @_minenum_enum[name.to_sym] ||= self.class._minenum_reflections[name.to_sym].build_enum(self)
       end
     end
   end

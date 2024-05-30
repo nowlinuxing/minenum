@@ -1,0 +1,13 @@
+module Minenum
+  module Enum
+    module Adapter
+      class LocalInstanceVariableAccessor
+        include Minenum::Enum::Adapter::_Adapter
+
+        @value: untyped
+
+        def initialize: (?untyped, ?Symbol) -> void
+      end
+    end
+  end
+end

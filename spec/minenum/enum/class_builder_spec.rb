@@ -5,7 +5,11 @@ require 'spec_helper'
 RSpec.describe Minenum::Enum::ClassBuilder do
   describe 'Enum object' do
     let(:enum_class) { described_class.build(foo: 0, bar: 1) }
-    let(:enum_object) { enum_class.new(value) }
+    let(:enum_object) do
+      object = enum_class.new
+      object.value = value
+      object
+    end
 
     describe '.values' do
       subject(:values) { enum_class.values }

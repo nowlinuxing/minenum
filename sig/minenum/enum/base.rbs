@@ -3,7 +3,8 @@ module Minenum
     class Base
       extend Forwardable
 
-      attr_reader value: untyped
+      @adapter: Minenum::Enum::Adapter::_Adapter
+
       attr_reader self._values: Minenum::Enum::Values
 
       alias _inspect inspect
@@ -12,6 +13,12 @@ module Minenum
 
       def initialize: (untyped) -> void
       def name: -> Symbol?
+      def value: -> untyped
+      def value=: (untyped) -> untyped
+
+      private
+
+      def _raw_value: -> untyped
     end
   end
 end

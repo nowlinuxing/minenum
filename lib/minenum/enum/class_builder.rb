@@ -31,9 +31,9 @@ module Minenum
       def add_predicate_methods(klass, values)
         values.each_key do |key|
           klass.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-            def #{key}?                                    # def size
-              self.class._values.match?(:'#{key}', @value) #   self.class._values.match?(:'size', @value)
-            end                                            # end
+            def #{key}?                                   # def size
+              self.class._values.match?(:'#{key}', value) #   self.class._values.match?(:'size', value)
+            end                                           # end
           RUBY
         end
       end
