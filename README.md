@@ -40,6 +40,10 @@ shirt.size.small? #=> true
 shirt.size = :medium
 shirt.size.name #=> :medium
 shirt.size.medium? #=> true
+
+# Call bang method to change the enum value
+shirt.size.small!
+shirt.size.small? #=> true
 ```
 
 ```ruby
