@@ -35,22 +35,20 @@ module Minenum
     end
 
     module AccessorAdder # :nodoc:
-      def add(model_class, methods_module, reflection)
-        add_singleton_method(model_class, reflection.name)
+      def add(model_class, methods_module, reflections, reflection)
+        add_singleton_method(model_class, reflection, reflection.name)
 
         add_getter(methods_module, reflection.name)
         add_setter(methods_module, reflection.name)
 
-        model_class._minenum_reflections[reflection.name] = reflection
+        reflections[reflection.name] = reflection
       end
       module_function :add
 
-      def add_singleton_method(model_class, name)
-        model_class.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-          def self.#{name}                              # def self.size
-            _minenum_reflections[:'#{name}'].enum_class #   _minenum_reflections[:'size'].enum_class
-          end                                           # end
-        RUBY
+      def add_singleton_method(model_class, reflection, name)
+        model_class.singleton_class.define_method(name) do
+          reflection.enum_class
+        end
       end
 
       def add_getter(methods_module, name)
@@ -73,7 +71,7 @@ module Minenum
 
     module ClassMethods # :nodoc:
       def enum(name, values)
-        _minenum_enum(name, values, _minenum_methods_module)
+        _minenum_enum(name, values, _minenum_methods_module, _minenum_reflections)
       end
 
       def _minenum_reflections
@@ -82,11 +80,11 @@ module Minenum
 
       private
 
-      def _minenum_enum(name, values, methods_module, adapter_builder: nil)
+      def _minenum_enum(name, values, methods_module, reflections, adapter_builder: nil)
         adapter_builder ||= Enum::Adapter::LocalInstanceVariableAccessor
 
         reflection = Reflection.new(self, name, values, adapter_builder: adapter_builder)
-        AccessorAdder.add(self, methods_module, reflection)
+        AccessorAdder.add(self, methods_module, reflections, reflection)
       end
 
       def _minenum_methods_module

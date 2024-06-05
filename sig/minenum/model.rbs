@@ -1,8 +1,8 @@
 module Minenum
   module Model
     module AccessorAdder
-      def self?.add: (untyped, untyped, Minenum::Model::Reflection) -> void
-      def self?.add_singleton_method: (untyped, Symbol) -> void
+      def self?.add: (untyped, untyped, Hash[Symbol, Minenum::Model::Reflection], Minenum::Model::Reflection) -> void
+      def self?.add_singleton_method: (untyped, Minenum::Model::Reflection, Symbol) -> void
       def self?.add_getter: (untyped, Symbol) -> void
       def self?.add_setter: (untyped, Symbol) -> void
     end
@@ -13,7 +13,7 @@ module Minenum
 
       private
 
-      def _minenum_enum: (String | Symbol, Hash[String | Symbol, untyped], Module, ?adapter_builder: untyped) -> void
+      def _minenum_enum: (String | Symbol, Hash[String | Symbol, untyped], Module, Hash[Symbol, Minenum::Model::Reflection], ?adapter_builder: untyped) -> void
       def _minenum_methods_module: -> Module
 
       def include: (Module) -> self
