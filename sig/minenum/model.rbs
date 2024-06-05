@@ -8,11 +8,12 @@ module Minenum
     end
 
     module ClassMethods
-      def enum: (String | Symbol name, Hash[String | Symbol, untyped], ?adapter_builder: Minenum::Enum::Adapter::_AdapterBuilder) -> void
+      def enum: (String | Symbol, Hash[String | Symbol, untyped]) -> void
       def _minenum_reflections: -> Hash[Symbol, untyped]
 
       private
 
+      def _minenum_enum: (String | Symbol, Hash[String | Symbol, untyped], Module, ?adapter_builder: untyped) -> void
       def _minenum_methods_module: -> Module
 
       def include: (Module) -> self

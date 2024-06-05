@@ -9,7 +9,7 @@ module Minenum
 
       attr_reader adapter_builder: untyped
 
-      def initialize: (untyped, String | Symbol, Hash[untyped, untyped], ?adapter_builder: Minenum::Enum::Adapter::_AdapterBuilder) -> void
+      def initialize: (untyped, String | Symbol, Hash[untyped, untyped], ?adapter_builder: untyped) -> void
       def name: -> Symbol
       def enum_class: -> untyped
       def build_enum: (untyped) -> untyped

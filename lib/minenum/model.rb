@@ -72,9 +72,8 @@ module Minenum
     end
 
     module ClassMethods # :nodoc:
-      def enum(name, values, adapter_builder: Enum::Adapter::LocalInstanceVariableAccessor)
-        reflection = Reflection.new(self, name, values, adapter_builder: adapter_builder)
-        AccessorAdder.add(self, _minenum_methods_module, reflection)
+      def enum(name, values)
+        _minenum_enum(name, values, _minenum_methods_module)
       end
 
       def _minenum_reflections
@@ -82,6 +81,13 @@ module Minenum
       end
 
       private
+
+      def _minenum_enum(name, values, methods_module, adapter_builder: nil)
+        adapter_builder ||= Enum::Adapter::LocalInstanceVariableAccessor
+
+        reflection = Reflection.new(self, name, values, adapter_builder: adapter_builder)
+        AccessorAdder.add(self, methods_module, reflection)
+      end
 
       def _minenum_methods_module
         @_minenum_methods_module ||= begin
