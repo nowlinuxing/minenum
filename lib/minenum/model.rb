@@ -31,12 +31,12 @@ module Minenum
   module Model
     def self.included(base)
       base.extend ClassMethods
-      base.include InstanceMethods
     end
 
     module AccessorAdder # :nodoc:
       def add(model_class, methods_module, reflections, reflection)
         add_singleton_method(model_class, reflection, reflection.name)
+        add_enum_method(methods_module, reflections) unless methods_module.method_defined?(:_minenum_enum)
 
         add_getter(methods_module, reflection.name)
         add_setter(methods_module, reflection.name)
@@ -50,6 +50,17 @@ module Minenum
           reflection.enum_class
         end
       end
+
+      def add_enum_method(methods_module, reflections)
+        methods_module.module_eval do
+          define_method(:_minenum_enum) do |name|
+            @_minenum_enum ||= {}
+            @_minenum_enum[name.to_sym] ||= reflections[name.to_sym].build_enum(self)
+          end
+          private :_minenum_enum
+        end
+      end
+      module_function :add_singleton_method, :add_enum_method
 
       def add_getter(methods_module, name)
         methods_module.module_eval <<~RUBY, __FILE__, __LINE__ + 1
@@ -66,7 +77,7 @@ module Minenum
           end                                       # end
         RUBY
       end
-      module_function :add_singleton_method, :add_getter, :add_setter
+      module_function :add_getter, :add_setter
     end
 
     module ClassMethods # :nodoc:
@@ -93,15 +104,6 @@ module Minenum
           include mod
           mod
         end
-      end
-    end
-
-    module InstanceMethods # :nodoc:
-      private
-
-      def _minenum_enum(name)
-        @_minenum_enum ||= {}
-        @_minenum_enum[name.to_sym] ||= self.class._minenum_reflections[name.to_sym].build_enum(self)
       end
     end
   end
