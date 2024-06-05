@@ -13,7 +13,7 @@ module Minenum
 
       private
 
-      def enum_methods_module: -> Module
+      def _minenum_methods_module: -> Module
 
       def include: (Module) -> self
     end
